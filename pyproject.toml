@@ -1,0 +1,19 @@
+[project]
+name = "arucutter"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Johannes Elias", email = "joheli@gmx.net" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "setuptools>=82.0.1",
+]
+
+[project.scripts]
+arucutter = "arucutter.cli:cli"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
