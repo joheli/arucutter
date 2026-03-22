@@ -1,0 +1,25 @@
+[directories]
+# The directory containing images
+img_directory = "experiments/input"
+# the output directory
+output_directory = "experiments/output"
+
+[minimal]
+# Minimal requirements - if these are not met the image is skipped
+width = 1800
+height = 1000
+# these arucos ids must be found
+aruco_ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+
+[[box]]
+aruco_ids = [2, 3, 8, 7]                    # choose four aruco ids
+corners = ['tl', 'tl', 'bl', 'bl']          # 'tl' = top left
+output_width = 500
+output_height = 500
+
+[[box]]
+aruco_ids = [7, 6, 1, 2]
+corners = ['bl', 'bl', 'tl', 'tl']
+output_width = 500
+output_height = 500
+

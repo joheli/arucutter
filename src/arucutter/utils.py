@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from arucutter.aruco import ArucoMarker
+import os
 
 def deskew_and_crop(
     image_path: str,
@@ -51,72 +52,38 @@ def rescale(frame, scales = (0.8, 0.3)):
     height = int(frame.shape[0] * scales[1])
     dimensions = (width, height)
     return cv2.resize(frame, dimensions, interpolation=cv2.INTER_AREA)
+        
+def describe_image(path: str):
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"No such file: {path}")
 
-def arucos(img_path: str, output_path: str) -> list[ArucoMarker]:
-    # Load image
-    img = cv2.imread(img_path)
+    img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
     if img is None:
-        raise FileNotFoundError(f"Could not read image: {img_path}")
-    
-    #img_rs = img
+        raise ValueError(f"Could not load image: {path}")
 
-    # Convert to grayscale (recommended for detection)
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    shape = img.shape
 
-    # Choose 4x4 ArUco dictionary (e.g. 50 possible IDs)
-    aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_50)
-    parameters = cv2.aruco.DetectorParameters()
-    
-    # Try relaxing or adjusting these
-    parameters.minMarkerPerimeterRate = 0.03   # default ~0.03
-    parameters.maxMarkerPerimeterRate = 0.1    # default ~4.0, sometimes increase
-    parameters.useAruco3Detection = False      # default =  False
+    # Height and width
+    height = shape[0]
+    width = shape[1]
 
-    parameters.minDistanceToBorder = 3         # if markers are near image edges
-    parameters.adaptiveThreshWinSizeMin = 3
-    parameters.adaptiveThreshWinSizeMax = 33 # or higher
-    parameters.adaptiveThreshWinSizeStep = 10
-    parameters.adaptiveThreshConstant = 7     # tweak if illumination is tricky
-
-    # Create detector (OpenCV 4.7+ API)
-    detector = cv2.aruco.ArucoDetector(aruco_dict, parameters)
-
-    # Detect markers
-    corners, ids, _ = detector.detectMarkers(gray)
-
-    # Report how many were found
-    num_detected = 0 if ids is None else len(ids)
-    
-    arucomarkers: list[ArucoMarker] = []
-
-    if ids is not None:
-        # Flatten IDs for easier iteration
-        ids = ids.flatten()
-
-        for marker_corners, marker_id in zip(corners, ids):
-            # save as ArucoMarker
-            am = ArucoMarker(marker_id, marker_corners)
-            arucomarkers.append(am)
-
-            # print(f"Marker ID: {am.id}")
-            # print(f"  top_left:      {am.top_left}") # converts it to [x,y]
-            # print(f"  top_right:     {am.top_right}")
-            # print(f"  bottom_right:  {am.bottom_right}")
-            # print(f"  bottom_left:   {am.bottom_left}")
-
-        # Draw all detected markers on a copy of the image
-        img_drawn = img.copy()
-        cv2.aruco.drawDetectedMarkers(img_drawn, corners, ids)
-
-        # Save or show
-        cv2.imwrite(output_path, img_drawn)
-        print(f"Output image with drawn markers saved to: {output_path}")
-
-        # Optional: display (comment out if running headless)
-        # cv2.imshow("Detected ArUco markers", img_drawn)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
-        print(f"Detected {num_detected} ArUco markers")
-        return arucomarkers
+    # Determine color mode based on number of channels
+    if len(shape) == 2:
+        color_mode = "grayscale"
+        channels = 1
+    elif len(shape) == 3:
+        channels = shape[2]
+        if channels == 3:
+            color_mode = "BGR (color)"
+        elif channels == 4:
+            color_mode = "BGRA (color with alpha)"
+        else:
+            color_mode = f"{channels}-channel image"
     else:
-        print("No markers detected.")
+        color_mode = "unknown"
+        channels = None
+    
+    return {'width': width,
+            'height': height,
+            'channels': channels,
+            'color_mode': color_mode}

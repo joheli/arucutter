@@ -1,6 +1,6 @@
 [project]
 name = "arucutter"
-version = "0.1.0"
+version = "0.0.1"
 description = "Add your description here"
 readme = "README.md"
 authors = [
@@ -8,12 +8,15 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
-    "setuptools>=82.0.1",
+    "opencv-python>=4.13.0.92",
+    "pydantic>=2.12.5",
+    "rich>=14.3.3",
+    "typer>=0.24.1",
 ]
 
 [project.scripts]
 arucutter = "arucutter.cli:cli"
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["uv-build"]
+build-backend = "uv_build"
