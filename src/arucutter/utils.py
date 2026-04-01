@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from arucutter.aruco import ArucoMarker
 import os
+from pathlib import Path
 
 def deskew_and_crop(
     image_path: str,
@@ -53,11 +54,11 @@ def rescale(frame, scales = (0.8, 0.3)):
     dimensions = (width, height)
     return cv2.resize(frame, dimensions, interpolation=cv2.INTER_AREA)
         
-def describe_image(path: str):
-    if not os.path.exists(path):
+def describe_image(path: Path):
+    if not path.exists():
         raise FileNotFoundError(f"No such file: {path}")
 
-    img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
+    img = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
     if img is None:
         raise ValueError(f"Could not load image: {path}")
 

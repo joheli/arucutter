@@ -1,7 +1,7 @@
 [project]
 name = "arucutter"
-version = "0.0.1"
-description = "Add your description here"
+version = "0.0.2"
+description = "Arucutter segments images based on ArUco markers."
 readme = "README.md"
 authors = [
     { name = "Johannes Elias", email = "joheli@gmx.net" }
@@ -20,3 +20,8 @@ arucutter = "arucutter.cli:cli"
 [build-system]
 requires = ["uv-build"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "ptpython>=3.0.32",
+]

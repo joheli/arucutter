@@ -1,8 +1,10 @@
 [directories]
 # The directory containing images
 img_directory = "demo/input"
-# the output directory
+# The output directory
 output_directory = "demo/output"
+# Also output image with found ArUco markers? (for debugging only)
+output_found_markers = false
 
 [minimal]
 # Minimal requirements - if these are not met the image is skipped
@@ -44,5 +46,11 @@ corners = ['tr', 'tl', 'bl', 'br']
 output_width = 360
 output_height = 500
 
+[aruco]
+# Please specify ArUco dictionary name
+# (see options at https://docs.opencv.org/3.4/dc/df7/dictionary_8hpp.html)
+dict_code = "4X4_50" # leave away prefix "DICT_"
 
-
+# detector parameters tweak 
+# (see options at https://docs.opencv.org/4.x/d1/dcd/structcv_1_1aruco_1_1DetectorParameters.html)
+detector_parameters = {"minMarkerPerimeterRate" = 0.03, "minDistanceToBorder" = 3}

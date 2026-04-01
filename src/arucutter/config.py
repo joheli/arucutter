@@ -1,6 +1,6 @@
 from pathlib import Path
 from pydantic import BaseModel, Field, DirectoryPath, AfterValidator
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Any
 # from typing_extensions import Self
 import tomllib
 
@@ -9,9 +9,14 @@ def length_four(l: list[int|Literal["tl", "tr", "bl", "br"]]) -> list[int|Litera
         raise ValueError(f"The length of {l} is not 4!")
     return l
 
+class Aruco(BaseModel):
+    dict_code: str
+    detector_parameters: dict[str, Any] | None = None
+
 class Directories(BaseModel):
     img_directory: DirectoryPath
     output_directory: DirectoryPath
+    output_found_markers: bool = False
 
 class Minimal(BaseModel):
     width: Annotated[int, Field(gt = 1799)]
@@ -25,6 +30,7 @@ class Box(BaseModel):
     output_height: int
 
 class Config(BaseModel):
+    aruco: Aruco
     directories: Directories
     minimal: Minimal
     box: list[Box]
