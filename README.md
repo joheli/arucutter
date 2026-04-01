@@ -11,7 +11,7 @@ Type `pip install https://github.com/joheli/arucutter.git` to install. Prepend `
 
 ## Usage
 
-Supply a configuration toml file as option `-c` to the commandline application `arucutter`. Check out the supplied configuration file ([arucutter.toml](arucutter.toml)) to get an overview of the contents. The presented toml file prefilled to accomodate images supplied in [demo](demo), so please go ahead and alter it to your needs.
+Supply a configuration toml file as option `-c` to the commandline application `arucutter`. Check out the supplied configuration file ([arucutter.toml](arucutter.toml)) to get an overview of the contents. The presented toml file prefilled to accomodate images supplied in folder [demo/input](demo/input), so please go ahead and alter it to your needs.
 
 ## Demo
 
