@@ -6,6 +6,9 @@
 
 Type `pip install https://github.com/joheli/arucutter.git` to install. Prepend `uv` to the previous command if you use [uv](https://docs.astral.sh/uv/).
 
+> [!IMPORTANT]
+> When creating a virtual environment with `uv`, make sure the selected python version is at least 3.13 - this may not be the default on your machine! If necessary, explicitly type `uv venv --python 3.13` (see [uv docs](https://docs.astral.sh/uv/concepts/python-versions/)).
+
 ## Usage
 
 Supply a configuration file as option `-c` to the commandline application `arucutter`. Check out the supplied configuration file ([arucutter.toml](arucutter.toml)) to get an overview of the contents. The presented toml file is prefilled and corresponds to the images supplied in folder [demo/input](demo/input). Please go ahead and alter it to your needs.
