@@ -14,6 +14,14 @@ height = 1000
 aruco_ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 
 [[box]]
+# intentionally flipped (mirrored) box containing two objects 
+# take care when specifying the order of the corners and enter in clockwise fashion, see above
+aruco_ids = [6, 7, 2, 1]
+corners = ['tr', 'tl', 'bl', 'br']
+output_width = 360
+output_height = 500
+
+[[label]]
 # turquoise crayon handwritten text "hello"
 # choose exactly four aruco ids that surround the area in a clockwise fashion, i.e. top left followed by top right, bottom right, and finally bottom left
 aruco_ids = [6, 11, 10, 5]   
@@ -25,32 +33,24 @@ output_width = 500
 output_height = 350
 
 [[box]]
-# red crayon handwritten text "arucutter"
-aruco_ids = [1, 6, 5, 0]
-corners = ['bl', 'tl', 'tr', 'br']
-output_width = 500
-output_height = 350
-
-[[box]]
 # cute tiger button
 aruco_ids = [13, 12, 7, 8]
 corners = ['tl', 'tr', 'br', 'bl']
 output_width = 360
 output_height = 500
 
-[[box]]
-# intentionally flipped (mirrored) box containing two objects 
-# take care when specifying the order of the corners and enter in clockwise fashion, see above
-aruco_ids = [6, 7, 2, 1]
-corners = ['tr', 'tl', 'bl', 'br']
-output_width = 360
-output_height = 500
+[[label]]
+# red crayon handwritten text "arucutter"
+aruco_ids = [1, 6, 5, 0]
+corners = ['bl', 'tl', 'tr', 'br']
+output_width = 500
+output_height = 350
 
 [aruco]
 # Please specify ArUco dictionary name
 # (see options at https://docs.opencv.org/3.4/dc/df7/dictionary_8hpp.html)
 dict_code = "4X4_50" # leave away prefix "DICT_"
 
-# detector parameters tweak 
+# detector parameters tweak station - try to adjust parameters to improve AruCo detection
 # (see options at https://docs.opencv.org/4.x/d1/dcd/structcv_1_1aruco_1_1DetectorParameters.html)
 detector_parameters = {"minMarkerPerimeterRate" = 0.03, "minDistanceToBorder" = 3}

@@ -1,7 +1,7 @@
 from pathlib import Path
 from arucutter.config import Config
 from arucutter.aruco import arucos
-from arucutter.utils import describe_image, deskew_and_crop
+from arucutter.utils import describe_image, deskew_and_crop, hexit, retrieve_boxnr, persist_boxnr
 
 class ArucutterError(Exception):
     pass
@@ -17,10 +17,9 @@ def pipeline(config: Config):
         # skip image if minimal parameters not met
         if img_det["width"] < config.minimal.width or img_det["height"] < config.minimal.height:
             print(f"""
-                  Image {img_path} does not meet minimal requirements.
+                  Skipping image {img_path}, as it does not meet minimal requirements.
                   Minimal height has to be {config.minimal.height}.
                   Minimal width has to be {config.minimal.width}.
-                  Image {img_path} has the following details: {img_det}
                   """)
             # skip
             continue
@@ -39,11 +38,25 @@ def pipeline(config: Config):
         arucomarkers_dict = {a.id:a for a in arucomarkers}
         # print(arucomarkers_dict)
         
-        output_count = 1
+        # retrieve the latest box number from file .boxnr
+        box_nr = retrieve_boxnr()
         
-        for box in config.box:
-            src_points = [arucomarkers_dict[i].x(c) for i, c in zip(box.aruco_ids, box.corners)]
-            deskew_and_crop(image_path=img_path, src_points=src_points, dst_width=box.output_width, 
-                            dst_height=box.output_height, 
-                            output_path=config.directories.output_directory / f"{img_path.stem}_box_{output_count}.png")
-            output_count += 1
+        # copy list of labels from config; it might be None
+        labels = config.label
+        
+        # if None, create a list of None
+        if not config.label:
+            labels = [None] * len(config.box)
+            
+        for b, l in zip(config.box, labels):
+            src_points = [arucomarkers_dict[i].x(c) for i, c in zip(b.aruco_ids, b.corners)]
+            deskew_and_crop(image_path=img_path, src_points=src_points, dst_width=b.output_width, dst_height=b.output_height, 
+                            output_path=config.directories.output_directory / f"{img_path.stem}_box_{hexit(box_nr)}.png")
+            if l:
+                src_points = [arucomarkers_dict[i].x(c) for i, c in zip(l.aruco_ids, l.corners)]
+                deskew_and_crop(image_path=img_path, src_points=src_points, dst_width=l.output_width, dst_height=l.output_height, 
+                                output_path=config.directories.output_directory / f"{img_path.stem}_label_{hexit(box_nr)}.png")
+            box_nr += 1
+        
+        # finally save the last box_nr to .boxnr
+        persist_boxnr(box_nr)

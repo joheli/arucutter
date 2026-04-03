@@ -1,8 +1,7 @@
 import cv2
 import numpy as np
-from arucutter.aruco import ArucoMarker
-import os
 from pathlib import Path
+from typing import Literal
 
 def deskew_and_crop(
     image_path: str,
@@ -88,3 +87,51 @@ def describe_image(path: Path):
             'height': height,
             'channels': channels,
             'color_mode': color_mode}
+    
+def hexit(i: int, len: int = 3, case: Literal["upper", "lower"] = "lower"):
+    """
+    convert an integer to a hex string of length `len`
+    """
+    # increase len if necessary
+    while i > 16**len:
+        len += 1
+    # generate hex string
+    hex_str = hex(i)[2:]    # cut away the first two characters '0x'
+    # fill with zeroes
+    hex_str_padded = hex_str.zfill(len)
+    # upper?
+    if case == "upper":
+        hex_str_padded = hex_str_padded.upper()
+    # return
+    return hex_str_padded
+
+def retrieve_boxnr(boxnr_file: Path = Path(".boxnr"), nchar: int = 10) -> int:
+    box_nr = 1
+    if boxnr_file.exists():
+        with boxnr_file.open("r", encoding="utf-8") as b:
+            boxnr_file_content = b.read(nchar) # only read first nchar characters
+        try:
+            box_nr = int(boxnr_file_content)
+        except:
+            box_nr = 1
+            print("Box nr. could not be retrieved from file.")
+    return box_nr
+
+def persist_boxnr(box_nr: int, boxnr_file: Path = Path(".boxnr")) -> bool:
+    # remove file if exists
+    if boxnr_file.exists():
+        try: 
+            boxnr_file.unlink()
+        except:
+            return False
+    # write box_nr to boxnr file
+    try:
+        with boxnr_file.open("w", encoding="utf-8") as b:
+            b.write(str(box_nr))
+        return True
+    except:
+        return False
+            
+    
+    
+    
