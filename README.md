@@ -1,40 +1,158 @@
 # arucutter
 
-`arucutter` is a tool for cutting boxes out of a picture containing [ArUco markers](https://www.uco.es/investiga/grupos/ava/portfolio/aruco/). In other words, `arucutter` segments a given image using ArUco markers as visual cues that inform the segmentation process.
+`arucutter` extracts rectangular regions (boxes and optional labels) from images using ArUco markers as reference points.
+
+It is designed for scenarios where you photograph objects with marker frames and want consistent, automatic cropping—even if the camera angle or position varies.
+
+---
+
+## What it does
+
+Given an image with ArUco markers around objects, `arucutter` will:
+
+- detect ArUco markers
+- compute perspective transforms
+- crop defined regions ("boxes")
+- optionally crop associated labels
+
+---
+
+## Quickstart (1 minute)
+
+```bash
+git clone https://github.com/joheli/arucutter.git
+cd arucutter
+
+uv venv --python 3.13
+uv pip install .
+
+arucutter -c arucutter.toml
+```
+
+This processes the sample images in `demo/input` and writes results to `demo/output`. 
+
+---
+
+## Requirements
+
+- Python 3.13+
+- Images in .png, .jpg, or .jpeg
+- ArUco markers visible in the images
+
+---
 
 ## Install
 
-Type `pip install https://github.com/joheli/arucutter.git` to install, preferably into a fresh environment. Prepend `uv` to the previous command if you use [uv](https://docs.astral.sh/uv/), which is highly recommended.
+Type `uv pip install https://github.com/joheli/arucutter.git` to install, preferably into a fresh environment. This makes application `arucutter` available from the command line.
 
-> [!IMPORTANT]
-> When creating a virtual environment with `uv`, make sure the selected python version is at least 3.13 - this may not be the default on your machine! If necessary, explicitly type `uv venv --python 3.13` (see [uv docs](https://docs.astral.sh/uv/concepts/python-versions/))!
+## How it works
 
-## Usage
+You configure everything in a `.toml` file:
 
-Supply a configuration file as option `-c` to the commandline application `arucutter`. Check out the supplied configuration file ([arucutter.toml](arucutter.toml)) to get an overview of the contents. The presented toml file is prefilled and corresponds to the images supplied in folder [demo/input](demo/input). Please go ahead and alter it to your needs.
+- where input images live
+- where outputs should go
+- which markers define each box
+- (optional) which markers define labels
 
-### Configuration 
+Run:
+
+```bash
+arucutter -c your_config.toml
+```
+
+---
+
+## Minimal config example
+
+```toml
+[input]
+dir = "demo/input"
+
+[output]
+dir = "demo/output"
+
+[[box]]
+ids = [0, 1, 2, 3]
+corners = ["tl", "tr", "br", "bl"]
+```
+
+Check out the supplied configuration file ([arucutter.toml](arucutter.toml)) for a more applied example.
+
+---
+
+## Marker ordering (important!)
+
+Each box or label is defined by:
+
+- 4 marker IDs
+- 4 corresponding corners
+
+Order must be:
+
+top-left → top-right → bottom-right → bottom-left
+
+Corner values:
+
+- tl = top-left
+- tr = top-right
+- br = bottom-right
+- bl = bottom-left
+
+---
+
+## Output
+
+- cropped box images
+- cropped label images (if configured)
+- optional debug image with detected markers
+
+---
+
+
+## Complete configuration options 
 
 The program is entirely controlled by the configuration file (see [arucutter.toml](arucutter.toml)), which you supply via command line option `-c`. 
 Within it, you can specify the parameters below.
 
-#### Directories
+### Directories
 Section `[directories]` allows you to input the directory where the source images sit and the directory where you want the output to be saved. Optionally, you
 can specify if you wish to output an image with the found ArUCo markers highlighted (for debugging, e.g. to see which markers were detected).
 
-#### Minimal
+### Minimal
 Section `[minimal]` specifies minimal quality criteria that your images have to meet to be processed.
 
-#### Boxes and Labels
+### Boxes and Labels
 You *must* specify one or more boxes by entering the ArUco ids, corners, the segment output width, and segment output height to section `[[box]]`. You *can* (i.e. as an option) add labels to sections with headings `[[label]]`. If you do, you have to add **one label per box**, i.e. if the number of boxes and labels do not match, an error is thrown.
 
-#### Aruco
+### Aruco
 Section `[aruco]` exposes some of the innards of [OpenCV's aruco module](https://docs.opencv.org/3.4/d9/d6d/tutorial_table_of_content_aruco.html). Here, you can specify the ArUCo dictionary to be used and additional parameters used for the detection of markers in an image.
 
 ## Demo
 
-Git clone the whole repo to a temporary directory by typing `git clone https://github.com/joheli/arucutter.git`. Install as above.
-Type `arucutter` or `arucutter -c arucutter.toml` to witness the processing of files in directory `demo`.
+demo/
+  input/
+  output/
+
+Run:
+
+```bash
+arucutter -c arucutter.toml
+```
+
+---
+
+## Common pitfalls
+
+- Missing marker IDs → box skipped
+- Wrong corner order → distorted output
+- Output directory missing → error
+- Labels count ≠ boxes count → error
+
+---
+
+## License
+
+MIT
 
 ## Acknowledgements
 
