@@ -65,15 +65,23 @@ arucutter -c your_config.toml
 ## Minimal config example
 
 ```toml
-[input]
-dir = "demo/input"
+[directories]
+img_directory = "demo/input"
+output_directory = "demo/output"
 
-[output]
-dir = "demo/output"
+[minimal]
+width = 1800
+height = 1000
+aruco_ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 
 [[box]]
-ids = [0, 1, 2, 3]
-corners = ["tl", "tr", "br", "bl"]
+aruco_ids = [6, 7, 2, 1]
+corners = ['tr', 'tl', 'bl', 'br']
+output_width = 360
+output_height = 500
+
+[aruco]
+dict_code = "4X4_50" 
 ```
 
 Check out the supplied configuration file ([arucutter.toml](arucutter.toml)) for a more applied example.
@@ -85,7 +93,7 @@ Check out the supplied configuration file ([arucutter.toml](arucutter.toml)) for
 Each box or label is defined by:
 
 - 4 marker IDs
-- 4 corresponding corners
+- 4 corresponding corners (to specify the exact points in the image that serve as rectangle corners)
 
 Order must be:
 
