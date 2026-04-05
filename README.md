@@ -135,23 +135,10 @@ You *must* specify one or more boxes by entering the ArUco ids, corners, the seg
 ### Aruco
 Section `[aruco]` exposes some of the innards of [OpenCV's aruco module](https://docs.opencv.org/3.4/d9/d6d/tutorial_table_of_content_aruco.html). Here, you can specify the ArUCo dictionary to be used and additional parameters used for the detection of markers in an image.
 
-## Demo
-
-demo/
-  input/
-  output/
-
-Run:
-
-```bash
-arucutter -c arucutter.toml
-```
-
 ---
 
 ## Common pitfalls
 
-- Missing marker IDs → box skipped
 - Wrong corner order → distorted output
 - Output directory missing → error
 - Labels count ≠ boxes count → error
