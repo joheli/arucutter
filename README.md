@@ -1,13 +1,13 @@
 # arucutter
 
-`arucutter` is a tool for cutting out boxes out of a picture containing [ArUco markers](https://www.uco.es/investiga/grupos/ava/portfolio/aruco/). In other words, `arucutter` segments a given image using ArUco markers as visual cues that inform the segmentation process.
+`arucutter` is a tool for cutting boxes out of a picture containing [ArUco markers](https://www.uco.es/investiga/grupos/ava/portfolio/aruco/). In other words, `arucutter` segments a given image using ArUco markers as visual cues that inform the segmentation process.
 
 ## Install
 
-Type `pip install https://github.com/joheli/arucutter.git` to install. Prepend `uv` to the previous command if you use [uv](https://docs.astral.sh/uv/).
+Type `pip install https://github.com/joheli/arucutter.git` to install, preferably into a fresh environment. Prepend `uv` to the previous command if you use [uv](https://docs.astral.sh/uv/), which is highly recommended.
 
 > [!IMPORTANT]
-> When creating a virtual environment with `uv`, make sure the selected python version is at least 3.13 - this may not be the default on your machine! If necessary, explicitly type `uv venv --python 3.13` (see [uv docs](https://docs.astral.sh/uv/concepts/python-versions/)).
+> When creating a virtual environment with `uv`, make sure the selected python version is at least 3.13 - this may not be the default on your machine! If necessary, explicitly type `uv venv --python 3.13` (see [uv docs](https://docs.astral.sh/uv/concepts/python-versions/))!
 
 ## Usage
 

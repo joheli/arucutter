@@ -1,6 +1,6 @@
 [project]
 name = "arucutter"
-version = "0.1.0"
+version = "0.1.1"
 description = "Arucutter segments images based on ArUco markers."
 readme = "README.md"
 authors = [
@@ -13,6 +13,9 @@ dependencies = [
     "rich>=14.3.3",
     "typer>=0.24.1",
 ]
+
+[project.urls]
+homepage = "https://github.com/joheli/arucutter" 
 
 [project.scripts]
 arucutter = "arucutter.cli:cli"

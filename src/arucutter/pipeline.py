@@ -1,7 +1,7 @@
 from pathlib import Path
 from arucutter.config import Config
 from arucutter.aruco import arucos, ArucoDetectionError
-from arucutter.utils import describe_image, deskew_and_crop, hexit, retrieve_boxnr, persist_boxnr
+from arucutter.utils import describe_image, deskew_and_crop, retrieve_boxnr, persist_boxnr
 
 class ArucutterError(Exception):
     pass
@@ -53,11 +53,11 @@ def pipeline(img_path: Path, config: Config) -> bool:
     for b, l in zip(config.box, labels):
         src_points = [arucomarkers_dict[i].x(c) for i, c in zip(b.aruco_ids, b.corners)]
         deskew_and_crop(image_path=img_path, src_points=src_points, dst_width=b.output_width, dst_height=b.output_height, 
-                        output_path=config.directories.output_directory / f"{img_path.stem}_box_{hexit(box_nr)}.png")
+                        output_path=config.directories.output_directory / f"{img_path.stem}_box_{str(box_nr).zfill(4)}.png")
         if l:
             src_points = [arucomarkers_dict[i].x(c) for i, c in zip(l.aruco_ids, l.corners)]
             deskew_and_crop(image_path=img_path, src_points=src_points, dst_width=l.output_width, dst_height=l.output_height, 
-                            output_path=config.directories.output_directory / f"{img_path.stem}_label_{hexit(box_nr)}.png")
+                            output_path=config.directories.output_directory / f"{img_path.stem}_label_{str(box_nr).zfill(4)}.png")
         box_nr += 1
     
     # finally save the last box_nr to .boxnr
