@@ -3,6 +3,9 @@ import numpy as np
 from pathlib import Path
 from typing import Literal
 
+class AreaError(Exception):
+    pass
+
 def deskew_and_crop(
     image_path: str,
     src_points: np.ndarray,
@@ -131,6 +134,38 @@ def persist_boxnr(box_nr: int, boxnr_file: Path = Path(".boxnr")) -> bool:
         return True
     except:
         return False
+    
+def area(corners: np.ndarray, tolerance: float = 1.15) -> int:
+    """ 
+    Calculates approximate area in pixels^2
+    """
+    if corners.shape != (4, 2):
+        raise ValueError(f"The shape of 'corners' ({corners.shape}) is not (4, 2)! Aborting.")
+    
+    # append first row
+    corners_ext = np.append(corners, corners[0]).reshape(5, 2)
+    
+    # calculate differences
+    corners_diffs = np.diff(corners_ext, axis = 0)
+    
+    # calculate distances
+    corners_dist = np.sqrt(np.sum(corners_diffs ** 2, axis = 1))
+    
+    # calculate product of first two and return
+    # maybe check whether product of side 3 and 4 differ by more than x% - if yes raise exception that rectangle is strongly skewed
+    # add test
+    area_estimate1 = np.prod(corners_dist[:2])
+    area_estimate2 = np.prod(corners_dist[2:])
+    
+    # check
+    if bool(area_estimate1 > area_estimate2 * tolerance) or bool(area_estimate2 > area_estimate1 * tolerance):
+        raise AreaError(f"Corners {corners} are too skewed to pass as a rectangle.")
+    
+    return area_estimate1
+    
+    
+    
+    
             
     
     

@@ -11,7 +11,6 @@ app = typer.Typer()
 help_text = f"arucutter version {__version__}, visit https://github.com/joheli/arucutter for help"
 
 @app.callback(invoke_without_command = True, help = help_text)
-
 def main(config_file: Annotated[Path, typer.Option("-c", "--config", exists=True, readable=True, dir_okay=False)] = Path("arucutter.toml")):
     
     config = Config.from_toml(str(config_file))

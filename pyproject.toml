@@ -28,3 +28,8 @@ build-backend = "uv_build"
 dev = [
     "ptpython>=3.0.32",
 ]
+
+[tool.pytest.ini_options]
+testpaths = [
+  "tests",
+]
