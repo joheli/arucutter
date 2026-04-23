@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from pathlib import Path
 from typing import Literal
+import warnings
 
 class AreaError(Exception):
     pass
@@ -11,7 +12,9 @@ def deskew_and_crop(
     src_points: np.ndarray,
     dst_width: int,
     dst_height: int,
-    output_path: str = "arucos/output/deskewed.png"
+    output_path: str = "arucos/output/deskewed.png",
+    area_increase: Literal["allow", "warn", "prevent"] = "prevent",
+    area_tolerance: float = .15
 ):
     """
     image_path : path to input image
@@ -28,6 +31,22 @@ def deskew_and_crop(
 
     # Ensure float32 and correct shape
     src = np.array(src_points, dtype=np.float32).reshape(4, 2)
+    
+    # check source area and compare to destination area
+    if area_increase == "warn" or area_increase == "prevent":
+        # determine source area
+        area_source = area(src, area_tolerance)
+        # determine destination area
+        area_destination = dst_width * dst_height
+        # if increase in area detected, proceed according to `area_increase`
+        if area_destination > area_source:
+            area_factor = area_destination / area_source
+            if area_increase == "warn":
+                # warn
+                warnings.warn(f"Regarding {image_path}: the destination area ({area_destination:,d} of one of the boxes is {area_factor:.1f}x greater than the source area ({area_source:,d})!")
+            if area_increase == "prevent":
+                # raise error
+                raise AreaError(f"Regarding {image_path}: the destination area ({area_destination:,d} of one of the boxes is {area_factor:.1f}x greater than the source area ({area_source:,d})!")
 
     # Destination rectangle
     dst = np.array(
@@ -135,9 +154,14 @@ def persist_boxnr(box_nr: int, boxnr_file: Path = Path(".boxnr")) -> bool:
     except:
         return False
     
-def area(corners: np.ndarray, tolerance: float = 1.15) -> int:
+def area(corners: np.ndarray, tolerance: float = .15) -> int:
     """ 
     Calculates approximate area in pixels^2
+    corners     x,y coordinates in a picture with a shape of (4, 2), i.e. 4 rows and 2 colums
+    tolerance   If a rectangle has four sides, e.g. 1-4, then the area is estimated twice,
+                once using side 1 and 2, and a second time using sides 3 and 4.
+                If the estimates differ by more than tolerance, then the rectangle is probably very skewed and 
+                the area esimation unreliable.
     """
     if corners.shape != (4, 2):
         raise ValueError(f"The shape of 'corners' ({corners.shape}) is not (4, 2)! Aborting.")
@@ -158,10 +182,10 @@ def area(corners: np.ndarray, tolerance: float = 1.15) -> int:
     area_estimate2 = np.prod(corners_dist[2:])
     
     # check
-    if bool(area_estimate1 > area_estimate2 * tolerance) or bool(area_estimate2 > area_estimate1 * tolerance):
-        raise AreaError(f"Corners {corners} are too skewed to pass as a rectangle.")
+    if bool(area_estimate1 > area_estimate2 * (1. + tolerance)) or bool(area_estimate2 > area_estimate1 * (1. + tolerance)):
+        raise AreaError(f"Corners {corners} are too skewed to pass as a orthogonal rectangle.")
     
-    return area_estimate1
+    return int(area_estimate1)
     
     
     

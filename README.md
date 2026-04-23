@@ -73,6 +73,7 @@ output_directory = "demo/output"
 width = 1800
 height = 1000
 aruco_ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+area_increase = "prevent"
 
 [[box]]
 aruco_ids = [6, 7, 2, 1]
@@ -127,10 +128,10 @@ Section `[directories]` allows you to input the directory where the source image
 can specify if you wish to output an image with the found ArUCo markers highlighted (for debugging, e.g. to see which markers were detected).
 
 ### Minimal
-Section `[minimal]` specifies minimal quality criteria that your images have to meet to be processed.
+Section `[minimal]` specifies minimal quality criteria that your images have to meet to be processed. By default, enlargement of boxes and labels is prevented (`area_increase` is set to "prevent"); if you want to just warn about or allow enlargement, set to "warn" or "allow", respectively.
 
 ### Boxes and Labels
-You *must* specify one or more boxes by entering the ArUco ids, corners, the segment output width, and segment output height to section `[[box]]`. You *can* (i.e. as an option) add labels to sections with headings `[[label]]`. If you do, you have to add **one label per box**, i.e. if the number of boxes and labels do not match, an error is thrown.
+You *must* specify one or more boxes by entering the ArUco ids, corners, the segment output width, and segment output height to section `[[box]]`. You *can* also add labels to sections using headings `[[label]]`. If you do, you have to add **one label per box**, i.e. if the number of boxes and labels do not match, an error is thrown.
 
 ### Aruco
 Section `[aruco]` exposes some of the innards of [OpenCV's aruco module](https://docs.opencv.org/3.4/d9/d6d/tutorial_table_of_content_aruco.html). Here, you can specify the ArUCo dictionary to be used and additional parameters used for the detection of markers in an image.

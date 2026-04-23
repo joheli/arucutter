@@ -25,6 +25,7 @@ class Minimal(BaseModel):
     width: Annotated[int, Field(gt = 1799)]
     height: Annotated[int, Field(gt = 999)]
     aruco_ids: list[int]
+    area_increase: Literal["warn", "allow", "prevent"] = "prevent"
 
 class Box(BaseModel):
     aruco_ids: Annotated[list[int], AfterValidator(length_four)]

@@ -53,11 +53,13 @@ def pipeline(img_path: Path, config: Config) -> bool:
     for b, l in zip(config.box, labels):
         src_points = [arucomarkers_dict[i].x(c) for i, c in zip(b.aruco_ids, b.corners)]
         deskew_and_crop(image_path=img_path, src_points=src_points, dst_width=b.output_width, dst_height=b.output_height, 
-                        output_path=config.directories.output_directory / f"{img_path.stem}_box_{str(box_nr).zfill(4)}.png")
+                        output_path=config.directories.output_directory / f"{img_path.stem}_box_{str(box_nr).zfill(4)}.png",
+                        area_increase=config.minimal.area_increase)
         if l:
             src_points = [arucomarkers_dict[i].x(c) for i, c in zip(l.aruco_ids, l.corners)]
             deskew_and_crop(image_path=img_path, src_points=src_points, dst_width=l.output_width, dst_height=l.output_height, 
-                            output_path=config.directories.output_directory / f"{img_path.stem}_label_{str(box_nr).zfill(4)}.png")
+                            output_path=config.directories.output_directory / f"{img_path.stem}_label_{str(box_nr).zfill(4)}.png",
+                            area_increase=config.minimal.area_increase)
         box_nr += 1
     
     # finally save the last box_nr to .boxnr

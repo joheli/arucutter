@@ -1,6 +1,6 @@
 [project]
 name = "arucutter"
-version = "0.1.2"
+version = "0.1.3"
 description = "Arucutter segments images based on ArUco markers."
 readme = "README.md"
 authors = [

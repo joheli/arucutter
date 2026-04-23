@@ -12,6 +12,7 @@ width = 1800
 height = 1000
 # these arucos ids must be found in each image
 aruco_ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+area_increase = "prevent" # default "prevent", i.e. enlargement of boxes and labels is prevented; can also be set to "warn" or "allow"!
 
 [[box]]
 # choose exactly four aruco ids that surround the area in a clockwise fashion, i.e. top left followed by top right, bottom right, and finally bottom left
