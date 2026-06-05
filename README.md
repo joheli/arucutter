@@ -1,5 +1,8 @@
 # arucutter
 
+> [!NOTE]
+> `arucutter` was recently used in a bid to [The Gemma 4 Good Hackathon](https://github.com/joheli/gemma4-hackathon)!
+
 `arucutter` extracts rectangular regions (boxes and optional labels) from images using ArUco markers as reference points.
 
 It is designed for scenarios where you photograph objects with marker frames and want consistent, automatic cropping—even if the camera angle or position varies.
