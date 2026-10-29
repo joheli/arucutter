@@ -1,11 +1,13 @@
-import numpy as np
-from typing import Literal, Any
+from typing import Any, Literal
+
 import cv2
+import numpy as np
+
 
 class ArucoDetectionError(Exception):
     pass
 
-class ArucoMarker():
+class ArucoMarker:
     corners: np.ndarray
     id: int
     top_left: list[int]
@@ -62,7 +64,7 @@ def get_aruco_dict_id(code: str) -> int:
         dict_id = getattr(cv2.aruco, key)
     # raise an error if not successful
     except AttributeError:
-        raise ArucoDetectionError(f"Unknown ArUCo dictionary: key")
+        raise ArucoDetectionError("Unknown ArUCo dictionary: key")
     return dict_id
 
 # method 'arucos' extracts ArucoMarkers from an image
@@ -102,7 +104,7 @@ def arucos(img_path: str, *,
     corners, ids, _ = detector.detectMarkers(gray)
 
     # Report how many were found
-    num_detected = 0 if ids is None else len(ids)
+    # num_detected = 0 if ids is None else len(ids)
     
     arucomarkers: list[ArucoMarker] = []
 
@@ -111,9 +113,8 @@ def arucos(img_path: str, *,
         ids = ids.flatten()
         
         # Check if all the necessary ids were found
-        if aruco_ids:
-            if not set(aruco_ids).issubset(set(ids)):
-                raise ArucoDetectionError(f"ArUco ids {aruco_ids} were not all found in image {str(img_path)}!")
+        if aruco_ids and not set(aruco_ids).issubset(set(ids)):
+                raise ArucoDetectionError(f"ArUco ids {aruco_ids} were not all found in image {img_path!s}!")
                 
         for marker_corners, marker_id in zip(corners, ids):
             # save as ArucoMarker
@@ -131,7 +132,7 @@ def arucos(img_path: str, *,
         # return
         return arucomarkers
     else:
-        raise ArucoDetectionError(f"No ArUco markers were found in image {str(img_path)}!")
+        raise ArucoDetectionError(f"No ArUco markers were found in image {img_path!s}!")
         
 if __name__ == "__main__":
     code = "7X7_1000"

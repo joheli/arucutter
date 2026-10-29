@@ -1,8 +1,9 @@
-from pathlib import Path
-from pydantic import BaseModel, Field, DirectoryPath, AfterValidator, model_validator
-from typing import Annotated, Literal, Any
-from typing_extensions import Self
 import tomllib
+from pathlib import Path
+from typing import Annotated, Any, Literal, Self
+
+from pydantic import AfterValidator, BaseModel, DirectoryPath, Field, model_validator
+
 
 class ArucutterConfigError(Exception):
     pass
@@ -43,9 +44,7 @@ class Config(BaseModel):
     @model_validator(mode = "after")
     def check_labels(self) -> Self:
         # are labels present at all?
-        if (self.label):
-            # length of label has to be the same as that of box
-            if len(self.box) != len(self.label):
+        if (self.label) and len(self.box) != len(self.label):
                 raise ArucutterConfigError(f"The number of boxes (provided: {len(self.box)}) and labels (provided: {len(self.label)}) are not equal!")
         return self
             

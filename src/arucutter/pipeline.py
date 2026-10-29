@@ -1,7 +1,14 @@
 from pathlib import Path
+
+from arucutter.aruco import ArucoDetectionError, arucos
 from arucutter.config import Config
-from arucutter.aruco import arucos, ArucoDetectionError
-from arucutter.utils import describe_image, deskew_and_crop, retrieve_boxnr, persist_boxnr
+from arucutter.utils import (
+    describe_image,
+    deskew_and_crop,
+    persist_boxnr,
+    retrieve_boxnr,
+)
+
 
 class ArucutterError(Exception):
     pass

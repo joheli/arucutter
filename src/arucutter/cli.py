@@ -1,10 +1,12 @@
 from pathlib import Path
-from arucutter.pipeline import pipeline
-from arucutter.config import Config
-from arucutter import __version__
 from typing import Annotated
+
 import typer
 from rich.progress import track
+
+from arucutter import __version__
+from arucutter.config import Config
+from arucutter.pipeline import pipeline
 
 app = typer.Typer()
 

@@ -1,6 +1,7 @@
-from importlib.metadata import PackageNotFoundError, version as pkg_version  # stdlib
-from pathlib import Path
 import tomllib  # stdlib on 3.13
+from importlib.metadata import PackageNotFoundError  # stdlib
+from importlib.metadata import version as pkg_version
+from pathlib import Path
 
 PACKAGE_NAME = "arucutter"  # must match [project].name or poetry name
 

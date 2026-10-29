@@ -1,6 +1,8 @@
-from arucutter.utils import area, AreaError#
-import pytest
 import numpy as np
+import pytest
+
+from arucutter.utils import AreaError, area
+
 
 def test_area():
     """ 

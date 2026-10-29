@@ -1,8 +1,10 @@
-import cv2
-import numpy as np
+import warnings
 from pathlib import Path
 from typing import Literal
-import warnings
+
+import cv2
+import numpy as np
+
 
 class AreaError(Exception):
     pass
